@@ -1,5 +1,10 @@
 # cost-blame
 
+[![Test](https://github.com/pfrederiksen/cost-blame/actions/workflows/test.yml/badge.svg)](https://github.com/pfrederiksen/cost-blame/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/pfrederiksen/cost-blame)](https://github.com/pfrederiksen/cost-blame/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pfrederiksen/cost-blame)](https://goreportcard.com/report/github.com/pfrederiksen/cost-blame)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 > Local-first CLI to attribute AWS cost spikes to services, tags, and likely resources.
 
 **cost-blame** helps CloudOps and FinOps teams answer the critical question: **"Who or what caused our AWS spend to rise?"**
@@ -17,6 +22,37 @@ Built with Go, it runs entirely locally using AWS Cost Explorer and Resource API
 
 ## Installation
 
+### Download Pre-built Binaries (Recommended)
+
+Download the latest release for your platform from the [releases page](https://github.com/pfrederiksen/cost-blame/releases):
+
+**macOS (Intel)**
+```bash
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_<VERSION>_Darwin_x86_64.tar.gz | tar xz
+sudo mv cost-blame /usr/local/bin/
+```
+
+**macOS (Apple Silicon)**
+```bash
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_<VERSION>_Darwin_arm64.tar.gz | tar xz
+sudo mv cost-blame /usr/local/bin/
+```
+
+**Linux (amd64)**
+```bash
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_<VERSION>_Linux_x86_64.tar.gz | tar xz
+sudo mv cost-blame /usr/local/bin/
+```
+
+**Windows**
+Download the `.zip` file from the releases page and extract it to your PATH.
+
+### Using Go
+
+```bash
+go install github.com/pfrederiksen/cost-blame@latest
+```
+
 ### From Source
 
 ```bash
@@ -28,9 +64,9 @@ make build
 
 ### Requirements
 
-- Go 1.22+
 - AWS credentials configured (via `~/.aws/credentials` or environment variables)
 - AWS Cost Explorer API access (requires payer account for multi-account visibility)
+- For building from source: Go 1.22+
 
 ## Quick Start
 
@@ -189,9 +225,43 @@ make lint
 go run main.go spike --last 7d --debug
 ```
 
+## CI/CD
+
+This project uses GitHub Actions for automated testing and releases:
+
+- **Automated Testing**: Every PR and push runs the full test suite
+- **Multi-platform Releases**: Automated builds for Linux, macOS, and Windows (amd64 + arm64)
+- **Semantic Versioning**: Tag a version (e.g., `v0.1.0`) to trigger an automated release
+
+### Creating a Release
+
+```bash
+# Tag the version
+git tag v0.1.0
+
+# Push the tag to trigger release workflow
+git push origin v0.1.0
+```
+
+The release workflow will automatically:
+- Run all tests
+- Build binaries for all platforms
+- Generate checksums
+- Create a GitHub release with installation instructions
+
 ## Contributing
 
 Contributions welcome! This is an open-source project under the Apache 2.0 license.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/amazing-feature`)
+3. Make your changes
+4. Run tests (`make test`)
+5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+6. Push to the branch (`git push origin feat/amazing-feature`)
+7. Open a Pull Request
+
+All PRs automatically run tests via GitHub Actions.
 
 ## License
 

@@ -1,0 +1,104 @@
+project_name: cost-blame
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+    binary: cost-blame
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - 'README'
+  groups:
+    - title: Features
+      regexp: '^feat:'
+      order: 0
+    - title: Bug Fixes
+      regexp: '^fix:'
+      order: 1
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: pfrederiksen
+    name: cost-blame
+  draft: false
+  prerelease: auto
+  name_template: "{{.ProjectName}} {{.Version}}"
+  header: |
+    ## Installation
+
+    ### macOS/Linux
+    ```bash
+    # Extract and install
+    tar xzf cost-blame_{{.Version}}_<OS>_<ARCH>.tar.gz
+    sudo mv cost-blame /usr/local/bin/
+    ```
+
+    ### Windows
+    ```powershell
+    # Extract the zip and add to PATH
+    ```
+
+    ### Using Go
+    ```bash
+    go install github.com/pfrederiksen/cost-blame@{{.Version}}
+    ```
+
+brews:
+  - repository:
+      owner: pfrederiksen
+      name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/pfrederiksen/cost-blame
+    description: Local-first CLI to attribute AWS cost spikes to services, tags, and likely resources
+    license: Apache-2.0
+    test: |
+      system "#{bin}/cost-blame", "--help"
+    skip_upload: auto
