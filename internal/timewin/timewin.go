@@ -72,7 +72,8 @@ func FormatCE(t time.Time) string {
 }
 
 // IncludesToday returns true if the current window includes today (incomplete data warning)
+// Note: Cost Explorer end dates are exclusive, so currentEnd = today means query excludes today
 func (w *Window) IncludesToday() bool {
 	today := time.Now().UTC().Truncate(24 * time.Hour)
-	return w.CurrentEnd.After(today) || w.CurrentEnd.Equal(today)
+	return w.CurrentEnd.After(today)
 }

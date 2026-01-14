@@ -55,11 +55,31 @@ func TestFormatCE(t *testing.T) {
 
 func TestIncludesToday(t *testing.T) {
 	now := time.Now().UTC()
-	w := &Window{
-		CurrentStart: now.Add(-24 * time.Hour),
-		CurrentEnd:   now,
+	today := now.Truncate(24 * time.Hour)
+	tomorrow := today.Add(24 * time.Hour)
+
+	tests := []struct {
+		name       string
+		currentEnd time.Time
+		want       bool
+	}{
+		{"window ends tomorrow (includes today)", tomorrow, true},
+		{"window ends at start of today (excludes today)", today, false},
+		{"window ends yesterday", today.Add(-24 * time.Hour), false},
+		{"window ends in future", tomorrow.Add(24 * time.Hour), true},
 	}
-	if !w.IncludesToday() {
-		t.Error("Expected IncludesToday() to be true for window ending now")
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &Window{
+				CurrentStart: tt.currentEnd.Add(-7 * 24 * time.Hour),
+				CurrentEnd:   tt.currentEnd,
+			}
+			got := w.IncludesToday()
+			if got != tt.want {
+				t.Errorf("IncludesToday() = %v, want %v (currentEnd=%v, today=%v)",
+					got, tt.want, tt.currentEnd, today)
+			}
+		})
 	}
 }
