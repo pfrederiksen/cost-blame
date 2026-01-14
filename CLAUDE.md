@@ -46,17 +46,28 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
    - Phase 8: Resource inventory (Tagging API, EC2, RDS)
    - Phase 9: Output formatting (tables with tablewriter, JSON)
    - Phase 10: Testing, documentation, Makefile
+   - Phase 11: CI/CD setup with GitHub Actions and GoReleaser
 
 6. **Testing Strategy**
    - Unit tests for time window parsing
    - Unit tests for delta calculations and percentage handling
-   - Mock-based tests for AWS API interactions (where applicable)
+   - Live integration testing against AWS Cost Explorer API
+   - Automated CI testing via GitHub Actions on every PR
 
-7. **Documentation**
-   - Comprehensive README with examples
+7. **CI/CD Pipeline**
+   - GitHub Actions workflow for automated testing
+   - GoReleaser for multi-platform binary builds
+   - Automated releases on git tags (v*)
+   - Builds for Linux, macOS (Intel/Apple Silicon), and Windows
+   - Generates checksums and semantic changelogs
+
+8. **Documentation**
+   - Comprehensive README with examples and CI badges
+   - Multiple installation methods (pre-built binaries, Go install, from source)
    - Inline code documentation
    - IAM permission requirements
    - Edge case handling notes
+   - Contributing guidelines
 
 ## Technical Highlights
 
