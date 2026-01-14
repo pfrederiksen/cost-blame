@@ -60,7 +60,16 @@ func runDrilldown(cmd *cobra.Command, args []string) error {
 	}
 
 	// Find resources
-	finder := inventory.NewFinder(clients.Tagging, clients.EC2, clients.RDS)
+	finder := inventory.NewFinder(
+		clients.Tagging,
+		clients.EC2,
+		clients.RDS,
+		clients.Lambda,
+		clients.S3,
+		clients.CloudFront,
+		clients.ECS,
+		clients.EKS,
+	)
 	resources, err := finder.FindByService(ctx, service, region, tagKey)
 	if err != nil {
 		log.Warn("partial results due to error", zap.Error(err))
