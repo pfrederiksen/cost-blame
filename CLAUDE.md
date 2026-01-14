@@ -47,12 +47,21 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
    - Phase 9: Output formatting (tables with tablewriter, JSON)
    - Phase 10: Testing, documentation, Makefile
    - Phase 11: CI/CD setup with GitHub Actions and GoReleaser
+   - Phase 12: Multi-account support and AWS Organizations integration (v0.2.0)
+   - Phase 13: Statistical anomaly detection with z-score analysis (v0.2.0)
+   - Phase 14: Extended service drilldowns (S3, Lambda, CloudFront, ECS, EKS) (v0.2.0)
+   - Phase 15: CSV export and Slack webhook integrations (v0.2.0)
+   - Phase 16: Homebrew tap for easy installation (v0.2.0)
+   - Phase 17: Comprehensive test coverage improvements (v0.2.1+)
 
 6. **Testing Strategy**
-   - Unit tests for time window parsing
+   - Unit tests for time window parsing (92% coverage)
    - Unit tests for delta calculations and percentage handling
-   - Live integration testing against AWS Cost Explorer API
+   - Service-specific AWS client initialization tests
+   - Mock-based tests for AWS API interactions where applicable
+   - Table-driven test patterns for comprehensive edge case coverage
    - Automated CI testing via GitHub Actions on every PR
+   - Ongoing coverage improvements targeting 50%+ overall coverage
 
 7. **CI/CD Pipeline**
    - GitHub Actions workflow for automated testing
@@ -63,11 +72,12 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
 
 8. **Documentation**
    - Comprehensive README with examples and CI badges
-   - Multiple installation methods (pre-built binaries, Go install, from source)
+   - Multiple installation methods (Homebrew, pre-built binaries, Go install, from source)
    - Inline code documentation
    - IAM permission requirements
    - Edge case handling notes
    - Contributing guidelines
+   - Release notes and semantic versioning
 
 ## Technical Highlights
 
@@ -93,10 +103,11 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
 
 ## Commands Implemented
 
-1. **spike**: Detect cost increases between two periods
+1. **spike**: Detect cost increases between two periods (supports multi-account, CSV export, Slack webhooks)
 2. **new-spend**: Find resources that just started spending
 3. **blame**: Attribute costs by tag values (team, app, etc.)
-4. **drilldown**: Map service spikes to specific resources
+4. **drilldown**: Map service spikes to specific resources (EC2, RDS, S3, Lambda, CloudFront, ECS, EKS)
+5. **anomaly**: Statistical anomaly detection using z-score analysis (v0.2.0)
 
 ## Code Quality
 
@@ -105,14 +116,24 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
 - **Logging**: Structured logging with debug flag
 - **Configuration**: Viper for config, respects AWS SDK defaults
 
-## Future Enhancements
+## Implemented Enhancements (v0.2.0+)
 
-Potential areas for expansion (not implemented in MVP):
+✅ **Completed**:
 - Multi-account support via AWS Organizations
-- Additional service drilldowns (S3, Lambda, CloudFront)
-- Anomaly detection with statistical models
-- Export integrations (Slack, PagerDuty, CSV)
-- Interactive TUI with bubble tea
+- Extended service drilldowns (S3, Lambda, CloudFront, ECS, EKS)
+- Anomaly detection with statistical z-score analysis
+- CSV export integration
+- Slack webhook integration with rich formatting
+- Homebrew tap for easy installation
+
+🎯 **Future Enhancements**:
+- PagerDuty integration
+- Interactive TUI mode with bubble tea
+- Cost forecasting and trend analysis
+- Budget threshold alerts
+- Custom notification channels (email, Microsoft Teams)
+- Historical cost comparison beyond dual-period
+- Resource utilization efficiency scores
 
 ## Why cost-blame?
 
