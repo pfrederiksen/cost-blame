@@ -14,33 +14,55 @@ Built with Go, it runs entirely locally using AWS Cost Explorer and Resource API
 ## Features
 
 - **Spike Detection**: Identify cost increases across services, regions, accounts, or tags
+- **Anomaly Detection**: Statistical analysis with z-score for detecting unusual cost patterns
 - **New Spender Identification**: Find resources that just started incurring costs
 - **Tag-based Attribution**: Blame cost changes on teams, apps, or environments via tags
-- **Resource Drilldown**: Map cost spikes to specific EC2 instances, RDS databases, and more
+- **Resource Drilldown**: Map cost spikes to specific EC2, RDS, S3, Lambda, CloudFront, ECS, EKS resources
+- **Multi-Account Support**: Query across AWS Organizations or filter specific accounts
+- **Export Options**: CSV export and Slack webhook integration for alerts
 - **Flexible Output**: Human-readable tables or JSON for automation
 - **AWS SDK v2**: Fast, modern AWS integration with proper pagination and rate limiting
 
 ## Installation
 
-### Download Pre-built Binaries (Recommended)
+### Homebrew (Recommended)
+
+```bash
+# Add the tap
+brew tap pfrederiksen/tap
+
+# Install cost-blame
+brew install cost-blame
+
+# Upgrade to latest version
+brew upgrade cost-blame
+```
+
+### Download Pre-built Binaries
 
 Download the latest release for your platform from the [releases page](https://github.com/pfrederiksen/cost-blame/releases):
 
 **macOS (Intel)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_<VERSION>_Darwin_x86_64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Darwin_x86_64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **macOS (Apple Silicon)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_<VERSION>_Darwin_arm64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Darwin_arm64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **Linux (amd64)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_<VERSION>_Linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Linux_x86_64.tar.gz | tar xz
+sudo mv cost-blame /usr/local/bin/
+```
+
+**Linux (arm64)**
+```bash
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Linux_arm64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
@@ -94,14 +116,20 @@ cost-blame drilldown AmazonEC2 --last 48h --region us-west-2 --tag-key team
 
 Detect cost spikes by comparing two equal time periods.
 
+**New in v0.2.0**: Multi-account support, CSV export, Slack webhooks
+
 **Flags:**
 - `--last`: Time window (`48h`, `7d`, `30d`)
 - `--granularity`: `DAILY` or `HOURLY` (default: `DAILY`)
 - `--threshold`: Minimum USD delta to report (default: `0`)
 - `--group-by`: `service`, `linked_account`, `region`, or `usage_type` (default: `service`)
 - `--tag-key`: Optional tag dimension to group by
+- `--accounts`: Filter to specific account IDs (comma-separated)
+- `--all-accounts`: Query all accounts in AWS Organization
 - `--top`: Number of results (default: `10`)
 - `--json`: Output as JSON
+- `--csv`: Export results to CSV file
+- `--slack-webhook`: Send alerts to Slack webhook URL
 - `--profile`: AWS profile
 - `--region`: AWS region (default: `us-east-1`)
 
@@ -278,3 +306,22 @@ Apache License 2.0 - see [LICENSE](LICENSE)
 ---
 
 Built with ❤️ for CloudOps teams tired of mystery AWS bills.
+
+### `cost-blame anomaly`
+
+Detect cost anomalies using statistical analysis (z-score).
+
+**Arguments:**
+- `--group-by`: `service` or `linked_account` (default: `service`)
+- `--historical-days`: Number of days for baseline (default: `30`)
+- `--threshold`: Z-score threshold for anomaly detection (default: `2.0`)
+- `--min-data-points`: Minimum data points required (default: `7`)
+- `--anomalies-only`: Show only detected anomalies
+- `--top`: Number of results (default: `20`)
+- `--json`: Output as JSON
+
+**Example:**
+
+```bash
+cost-blame anomaly --historical-days 30 --threshold 2.5 --anomalies-only
+```
