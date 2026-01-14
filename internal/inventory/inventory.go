@@ -6,11 +6,16 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
+	"github.com/aws/aws-sdk-go-v2/service/ecs"
+	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/resourcegroupstaggingapi"
 	tagtypes "github.com/aws/aws-sdk-go-v2/service/resourcegroupstaggingapi/types"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 // Resource represents an AWS resource with tags
@@ -25,17 +30,29 @@ type Resource struct {
 
 // Finder helps locate resources for cost attribution
 type Finder struct {
-	taggingClient *resourcegroupstaggingapi.Client
-	ec2Client     *ec2.Client
-	rdsClient     *rds.Client
+	taggingClient    *resourcegroupstaggingapi.Client
+	ec2Client        *ec2.Client
+	rdsClient        *rds.Client
+	lambdaClient     *lambda.Client
+	s3Client         *s3.Client
+	cloudfrontClient *cloudfront.Client
+	ecsClient        *ecs.Client
+	eksClient        *eks.Client
 }
 
 // NewFinder creates a new resource finder
-func NewFinder(tagging *resourcegroupstaggingapi.Client, ec2 *ec2.Client, rds *rds.Client) *Finder {
+func NewFinder(tagging *resourcegroupstaggingapi.Client, ec2 *ec2.Client, rds *rds.Client,
+	lambdaFunc *lambda.Client, s3 *s3.Client, cloudfront *cloudfront.Client,
+	ecs *ecs.Client, eks *eks.Client) *Finder {
 	return &Finder{
-		taggingClient: tagging,
-		ec2Client:     ec2,
-		rdsClient:     rds,
+		taggingClient:    tagging,
+		ec2Client:        ec2,
+		rdsClient:        rds,
+		lambdaClient:     lambdaFunc,
+		s3Client:         s3,
+		cloudfrontClient: cloudfront,
+		ecsClient:        ecs,
+		eksClient:        eks,
 	}
 }
 
@@ -49,6 +66,16 @@ func (f *Finder) FindByService(ctx context.Context, service, region, tagKey stri
 		return f.findEC2Resources(ctx, region, tagKey)
 	case strings.Contains(normalizedService, "rds"):
 		return f.findRDSResources(ctx, region, tagKey)
+	case strings.Contains(normalizedService, "lambda"):
+		return f.findLambdaResources(ctx, region)
+	case strings.Contains(normalizedService, "s3"):
+		return f.findS3Resources(ctx)
+	case strings.Contains(normalizedService, "cloudfront"):
+		return f.findCloudFrontResources(ctx)
+	case strings.Contains(normalizedService, "ecs"):
+		return f.findECSResources(ctx, region)
+	case strings.Contains(normalizedService, "eks"):
+		return f.findEKSResources(ctx, region)
 	default:
 		// Try generic tagging API
 		return f.findViaTaggingAPI(ctx, service, tagKey)

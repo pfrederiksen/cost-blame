@@ -26,10 +26,11 @@ type Delta struct {
 // QueryParams holds parameters for Cost Explorer queries
 type QueryParams struct {
 	Window       *timewin.Window
-	Granularity  string // DAILY or HOURLY
-	GroupBy      string // service, linked_account, region, usage_type
-	TagKey       string // optional tag dimension
+	Granularity  string   // DAILY or HOURLY
+	GroupBy      string   // service, linked_account, region, usage_type
+	TagKey       string   // optional tag dimension
 	TagValues    []string // optional filter for specific tag values
+	AccountIDs   []string // optional filter for specific accounts
 }
 
 // Query fetches cost data for current and prior periods and computes deltas
@@ -85,7 +86,7 @@ func Query(ctx context.Context, client *costexplorer.Client, params QueryParams)
 	currentCosts, err := queryCostAndUsage(ctx, client,
 		timewin.FormatCE(params.Window.CurrentStart),
 		timewin.FormatCE(params.Window.CurrentEnd),
-		gran, groupDefs)
+		gran, groupDefs, params.AccountIDs)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query current period: %w", err)
 	}
@@ -94,7 +95,7 @@ func Query(ctx context.Context, client *costexplorer.Client, params QueryParams)
 	priorCosts, err := queryCostAndUsage(ctx, client,
 		timewin.FormatCE(params.Window.PriorStart),
 		timewin.FormatCE(params.Window.PriorEnd),
-		gran, groupDefs)
+		gran, groupDefs, params.AccountIDs)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query prior period: %w", err)
 	}
@@ -110,7 +111,7 @@ func Query(ctx context.Context, client *costexplorer.Client, params QueryParams)
 	return deltas, nil
 }
 
-func queryCostAndUsage(ctx context.Context, client *costexplorer.Client, start, end string, gran types.Granularity, groupDefs []types.GroupDefinition) (map[string]float64, error) {
+func queryCostAndUsage(ctx context.Context, client *costexplorer.Client, start, end string, gran types.Granularity, groupDefs []types.GroupDefinition, accountIDs []string) (map[string]float64, error) {
 	input := &costexplorer.GetCostAndUsageInput{
 		TimePeriod: &types.DateInterval{
 			Start: aws.String(start),
@@ -119,6 +120,18 @@ func queryCostAndUsage(ctx context.Context, client *costexplorer.Client, start, 
 		Granularity: gran,
 		Metrics:     []string{"UnblendedCost"},
 		GroupBy:     groupDefs,
+	}
+
+	// Add account filter if specified
+	if len(accountIDs) > 0 {
+		values := make([]string, len(accountIDs))
+		copy(values, accountIDs)
+		input.Filter = &types.Expression{
+			Dimensions: &types.DimensionValues{
+				Key:    types.DimensionLinkedAccount,
+				Values: values,
+			},
+		}
 	}
 
 	costs := make(map[string]float64)

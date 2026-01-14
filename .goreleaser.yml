@@ -91,15 +91,14 @@ release:
     go install github.com/pfrederiksen/cost-blame@{{.Version}}
     ```
 
-# Homebrew tap disabled until repository is created
-# brews:
-#   - repository:
-#       owner: pfrederiksen
-#       name: homebrew-tap
-#     folder: Formula
-#     homepage: https://github.com/pfrederiksen/cost-blame
-#     description: Local-first CLI to attribute AWS cost spikes to services, tags, and likely resources
-#     license: Apache-2.0
-#     test: |
-#       system "#{bin}/cost-blame", "--help"
-#     skip_upload: auto
+brews:
+  - repository:
+      owner: pfrederiksen
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    folder: Formula
+    homepage: https://github.com/pfrederiksen/cost-blame
+    description: Local-first CLI to attribute AWS cost spikes to services, tags, and likely resources
+    license: Apache-2.0
+    test: |
+      system "#{bin}/cost-blame", "--help"

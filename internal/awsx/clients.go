@@ -6,19 +6,31 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/costexplorer"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	"github.com/aws/aws-sdk-go-v2/service/ecs"
+	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/organizations"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/resourcegroupstaggingapi"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 // Clients holds AWS SDK v2 service clients
 type Clients struct {
-	CostExplorer *costexplorer.Client
-	Tagging      *resourcegroupstaggingapi.Client
-	EC2          *ec2.Client
-	RDS          *rds.Client
-	Config       aws.Config
+	CostExplorer  *costexplorer.Client
+	Organizations *organizations.Client
+	Tagging       *resourcegroupstaggingapi.Client
+	EC2           *ec2.Client
+	RDS           *rds.Client
+	Lambda        *lambda.Client
+	S3            *s3.Client
+	CloudFront    *cloudfront.Client
+	ECS           *ecs.Client
+	EKS           *eks.Client
+	Config        aws.Config
 }
 
 // Options for AWS client configuration
@@ -45,10 +57,16 @@ func New(ctx context.Context, opts Options) (*Clients, error) {
 	}
 
 	return &Clients{
-		CostExplorer: costexplorer.NewFromConfig(cfg),
-		Tagging:      resourcegroupstaggingapi.NewFromConfig(cfg),
-		EC2:          ec2.NewFromConfig(cfg),
-		RDS:          rds.NewFromConfig(cfg),
-		Config:       cfg,
+		CostExplorer:  costexplorer.NewFromConfig(cfg),
+		Organizations: organizations.NewFromConfig(cfg),
+		Tagging:       resourcegroupstaggingapi.NewFromConfig(cfg),
+		EC2:           ec2.NewFromConfig(cfg),
+		RDS:           rds.NewFromConfig(cfg),
+		Lambda:        lambda.NewFromConfig(cfg),
+		S3:            s3.NewFromConfig(cfg),
+		CloudFront:    cloudfront.NewFromConfig(cfg),
+		ECS:           ecs.NewFromConfig(cfg),
+		EKS:           eks.NewFromConfig(cfg),
+		Config:        cfg,
 	}, nil
 }
