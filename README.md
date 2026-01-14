@@ -44,25 +44,25 @@ Download the latest release for your platform from the [releases page](https://g
 
 **macOS (Intel)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Darwin_x86_64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Darwin_x86_64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **macOS (Apple Silicon)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Darwin_arm64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Darwin_arm64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **Linux (amd64)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Linux_x86_64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **Linux (arm64)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.0_Linux_arm64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Linux_arm64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
@@ -297,11 +297,14 @@ Apache License 2.0 - see [LICENSE](LICENSE)
 
 ## Roadmap
 
-- Multi-account support via AWS Organizations
-- S3 and Lambda-specific drilldown
-- Anomaly detection beyond simple deltas
-- Export to CSV, Slack, or PagerDuty
+- ✅ Multi-account support via AWS Organizations (v0.2.0)
+- ✅ S3, Lambda, CloudFront, ECS, EKS drilldown (v0.2.0)
+- ✅ Anomaly detection with statistical analysis (v0.2.0)
+- ✅ CSV export and Slack webhook integration (v0.2.0)
 - Interactive TUI mode with bubble tea
+- PagerDuty integration
+- Cost forecasting and trend analysis
+- Budget threshold alerts
 
 ---
 
