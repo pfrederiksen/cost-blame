@@ -19,7 +19,14 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
    - Used GitHub CLI (`gh`) to create repository programmatically
    - Automated repo metadata, topics, and initial commit
 
-3. **Architecture Design**
+3. **Development Workflow**
+   - **Branch-based development**: All new work happens on feature branches
+   - Branch naming: `feat/feature-name`, `fix/bug-name`, `docs/update-name`
+   - Main branch protected: only merge via pull requests
+   - Commit early and often with descriptive messages
+   - Each feature branch focuses on a single concern
+
+4. **Architecture Design**
    - Modular Go structure with clean separation:
      - `/cmd` - Cobra command definitions
      - `/internal/awsx` - AWS SDK client management
@@ -28,7 +35,7 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
      - `/internal/inventory` - Resource enumeration
      - `/internal/output` - Formatters (table/JSON)
 
-4. **Implementation Phases**
+5. **Implementation Phases**
    - Phase 1: Project scaffold and GitHub repo creation
    - Phase 2: Core CLI framework with Cobra/Viper
    - Phase 3: AWS SDK v2 integration and config loading
@@ -40,12 +47,12 @@ This project was built entirely with **Claude Code** (Sonnet 4.5), Anthropic's o
    - Phase 9: Output formatting (tables with tablewriter, JSON)
    - Phase 10: Testing, documentation, Makefile
 
-5. **Testing Strategy**
+6. **Testing Strategy**
    - Unit tests for time window parsing
    - Unit tests for delta calculations and percentage handling
    - Mock-based tests for AWS API interactions (where applicable)
 
-6. **Documentation**
+7. **Documentation**
    - Comprehensive README with examples
    - Inline code documentation
    - IAM permission requirements
