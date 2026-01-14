@@ -44,25 +44,25 @@ Download the latest release for your platform from the [releases page](https://g
 
 **macOS (Intel)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Darwin_x86_64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.2_Darwin_x86_64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **macOS (Apple Silicon)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Darwin_arm64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.2_Darwin_arm64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **Linux (amd64)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.2_Linux_x86_64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
 **Linux (arm64)**
 ```bash
-curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.1_Linux_arm64.tar.gz | tar xz
+curl -L https://github.com/pfrederiksen/cost-blame/releases/latest/download/cost-blame_0.2.2_Linux_arm64.tar.gz | tar xz
 sudo mv cost-blame /usr/local/bin/
 ```
 
