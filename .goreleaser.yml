@@ -95,6 +95,7 @@ brews:
   - repository:
       owner: pfrederiksen
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     folder: Formula
     homepage: https://github.com/pfrederiksen/cost-blame
     description: Local-first CLI to attribute AWS cost spikes to services, tags, and likely resources
